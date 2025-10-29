@@ -10,7 +10,7 @@ test('Login succesful validation', async ({ page }) => {
 
 test ('Login blocked validation', async ({ page }) => {
     await page.goto('/login');
-    await page.getByRole('textbox', { name: 'Type your username' }).fill('testblocke');
+    await page.getByRole('textbox', { name: 'Type your username' }).fill('testblock');
     await page.getByRole('textbox', { name: 'Type your password' }).fill('password123');
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByText('User is blocked!')).toBeVisible();
