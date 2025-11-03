@@ -1,31 +1,45 @@
-import test, { expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+import { USERS, MESSAGES } from '../data/login/login';
 
-test('Login succesful validation', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-    await page.getByRole('textbox', { name: 'Type your username' }).fill('test');
-    await page.getByRole('textbox', { name: 'Type your password' }).fill('password123');
-    await page.getByRole('button', { name: 'Login' }).click();
-    await expect(page.getByText('User successfully logged in!')).toBeVisible();
 });
 
-test ('Login blocked validation', async ({ page }) => {
-    await page.goto('/login');
-    await page.getByRole('textbox', { name: 'Type your username' }).fill('testblock');
-    await page.getByRole('textbox', { name: 'Type your password' }).fill('password123');
+test('Login succesful and logout', async ({ page }) => {
+    await test.step('Enter login credentials', async () => {
+        await page.getByRole('textbox', { name: 'Type your username' }).fill(USERS.valid.username);
+        await page.getByRole('textbox', { name: 'Type your password' }).fill(USERS.valid.password);
+        await page.getByRole('button', { name: 'Login' }).click();
+    });
+
+    await test.step('Verify successful login', async () => {
+        await expect(page.getByText(MESSAGES.success.login)).toBeVisible();
+        await page.waitForTimeout(3000);
+        await expect(page.url()).toBe('https://playground-drab-six.vercel.app/dashboard');
+        await expect(page.getByText('User test authenticated')).toHaveText(MESSAGES.success.authenticated(USERS.valid.username));
+    });
+
+    await test.step('Perform and verify logout', async () => {
+        await page.getByRole('button', { name: 'Logout' }).click();
+        await expect(page.getByText('You have been logged out.')).toHaveText(MESSAGES.success.logout);
+    });
+});
+
+test('Login blocked validation', async ({ page }) => {
+    await page.getByRole('textbox', { name: 'Type your username' }).fill(USERS.blocked.username);
+    await page.getByRole('textbox', { name: 'Type your password' }).fill(USERS.blocked.password);
     await page.getByRole('button', { name: 'Login' }).click();
-    await expect(page.getByText('User blocked!')).toBeVisible();
+    await expect(page.getByText('User blocked!')).toHaveText(MESSAGES.errors.blocked);
 });
 
 test('Invalid username scenario', async ({ page }) => {
-    await page.goto('/login');
-    await page.getByRole('textbox', { name: 'Type your username' }).fill('wrongUser');
-    await page.getByRole('textbox', { name: 'Type your password' }).fill('password123');
+    await page.getByRole('textbox', { name: 'Type your username' }).fill('USERS.invalid.username');
+    await page.getByRole('textbox', { name: 'Type your password' }).fill('USERS.invalid.password');
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByText('User not found!')).toBeVisible();
 });
 
 test('Invalid password scenario', async ({ page }) => {
-    await page.goto('/login');
     await page.getByRole('textbox', { name: 'Type your username' }).fill('test');
     await page.getByRole('textbox', { name: 'Type your password' }).fill('wrongPassword');
     await page.getByRole('button', { name: 'Login' }).click();
@@ -33,7 +47,6 @@ test('Invalid password scenario', async ({ page }) => {
 });
 
 test('Multiple wrong password attempts version 1', async ({ page }) => {
-    await page.goto('/login');
     await page.getByRole('textbox', { name: 'Type your username' }).fill('test');
     await page.getByRole('textbox', { name: 'Type your password' }).fill('wrongPassword1');
     await page.getByRole('button', { name: 'Login' }).click();
@@ -43,19 +56,18 @@ test('Multiple wrong password attempts version 1', async ({ page }) => {
 });
 
 test('Multiple wrong password attempts version 2', async ({ page }) => {
-    await page.goto('/login');
-    for (let i = 0; i < 3; i++) {
-        await page.getByRole('textbox', { name: 'Type your username' }).fill('test');
-        await page.getByRole('textbox', { name: 'Type your password' }).fill('wrongPassword');
-        await page.getByRole('button', { name: 'Login' }).click();
-    }
-    await expect(page.getByText('User temporarily blocked!')).toBeVisible();
+    await test.step('Attempt multiple failed logins', async () => {
+        for (let i = 0; i < 3; i++) {
+            await test.step(`Login attempt ${i + 1}`, async () => {
+                await page.getByRole('textbox', { name: 'Type your username' }).fill(USERS.valid.username);
+                await page.getByRole('textbox', { name: 'Type your password' }).fill(USERS.wrongpassword.password);
+                await page.getByRole('button', { name: 'Login' }).click();
+            });
+        }
+    });
+
+    await test.step('Verify account is blocked', async () => {
+        await expect(page.getByText('User temporarily blocked!')).toHaveText(MESSAGES.errors.tooManyAttempts);
+    });
 });
 
-
-
-test('Login empty fields validation', async ({ page }) => {
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Login' }).click();
-    await expect(page.url()).toBe('https://playground-drab-six.vercel.app/login');
-}); 
