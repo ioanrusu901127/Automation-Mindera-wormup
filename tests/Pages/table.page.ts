@@ -12,7 +12,7 @@ export class TablePage {
     constructor(page: Page) {
 
         this.page = page;        
-        const format = (s: string) => s ? s.replace(' ', '') : '';
+        const format = (s: string) => s ? s.replace(/ /g, '') : '';
 
         this.characterName = (name: string) => this.page.locator('#tableCharacterName' + format(name));
         this.characterImage = (name: string) => this.page.getByRole('img', { name });

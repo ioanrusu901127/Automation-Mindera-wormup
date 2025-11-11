@@ -1,7 +1,6 @@
-import { test , expect, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from './Pages/login.page';
 import { USERS } from './data/login/login';
-import { beforeEach } from 'node:test';
 
 let loginPage: LoginPage;
 
