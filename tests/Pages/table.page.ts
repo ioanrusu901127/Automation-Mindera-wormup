@@ -1,5 +1,6 @@
 import type { Page , Locator} from '@playwright/test';
 import test, { expect } from '@playwright/test';
+import { time } from 'console';
 
 export class TablePage {
     private page: Page;
@@ -23,15 +24,14 @@ export class TablePage {
 
     async navigateToTable() {
         await test.step('Navigate to the HP table', async () => {
-        this.page.goto('/table');
+        await this.page.goto('/table');
     });
     }
 
 
     async verifyNameText(name: string) {
         await test.step('Check the name of character: ' + name, async ()=> {
-        await expect(this.characterName(name)).toBeVisible();
-
+        await expect(this.characterName(name)).toBeVisible(); 
     })
     }
 
@@ -42,7 +42,6 @@ export class TablePage {
     })
     }
    
-
     async verifyIcon(name: string) {
         await test.step('Verify the character\'s icon: ' + name, async () => {
         await expect(this.characterImage(name)).toBeVisible();
@@ -64,7 +63,5 @@ export class TablePage {
 
     });
     }
-
-
 
 }
