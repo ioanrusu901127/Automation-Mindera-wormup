@@ -1,6 +1,5 @@
 import type { Page , Locator} from '@playwright/test';
 import test, { expect } from '@playwright/test';
-import { time } from 'console';
 
 export class TablePage {
     private page: Page;
@@ -35,7 +34,7 @@ export class TablePage {
     })
     }
 
-    async veryfyHouseVisible(name: string) {
+    async verifyHouseVisible(name: string) {
         await test.step('Verify the house of the character: ' + name, async ()=> {
         await expect(this.characterHouse(name)).toBeVisible();
 

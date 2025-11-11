@@ -1,6 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
-import { count } from 'console';
 
 export class FormPage {
     
@@ -32,13 +31,13 @@ export class FormPage {
     
     }
 
-async navigatetoForm() {
+async navigateToForm() {
     await this.page.goto('/form');
   }
 
 
 async fillName(userName: string) {
-    await this .nameimput.fill(userName);
+    await this.nameimput.fill(userName);
 }
 
 async fillEmail(userEmail: string) {
