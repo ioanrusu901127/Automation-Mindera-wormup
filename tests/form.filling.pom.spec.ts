@@ -6,7 +6,7 @@ for(const user of USERS) {
 
 test('Form fill-' + user.name + ',' + user.countrylabel, async ({ page }) => {
     const formPage = new FormPage(page);
-    await formPage.navigatetoForm();
+    await formPage.navigateToForm();
     await formPage.fillName(user.name); 
     await formPage.fillEmail(user.email);
     await formPage.fillPassword(user.password);
