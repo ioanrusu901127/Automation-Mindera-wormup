@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-import { USERS } from '../data/forms/users-date-forms';
+import { USERS } from './data/forms/users-date-forms';
 
 for (const user of USERS) {
-    test(`Form filling test - ${user.scenario}`, async ({ page }) => {
+    
+    test(`Form filling test - ${user.scenario} )`, async ({ page }) => {
         await page.goto('/form');
         await page.getByRole('textbox', { name: 'Name *' }).click();
         await page.getByRole('textbox', { name: 'Name *' }).fill(user.name);

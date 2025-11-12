@@ -24,7 +24,7 @@ export const MESSAGES = {
     },
     errors: {
         blocked: 'User blocked!',
-        invalidL : 'User not found!',
+        invalid : 'User not found!',
         wrongpassword : 'Incorrect username or password!',
         tooManyAttempts : 'User temporarily blocked!',
     },

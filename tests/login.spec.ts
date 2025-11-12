@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import { USERS, MESSAGES } from '../data/login/login';
+import { USERS, MESSAGES } from './data/login/login';
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/login');
