@@ -15,7 +15,7 @@ export class LoginPage {
     private messageLogout: Locator;
     
     constructor(page: Page) {
-        this.page = page;;
+        this.page = page;
         this.usernameInput = page.getByRole('textbox', { name: 'Type your username' })
         this.passwordInput = page.getByRole('textbox', { name: 'Type your password' });
         this.loginButton = page.getByRole('button', { name: 'Login' });
@@ -50,10 +50,12 @@ export class LoginPage {
         await expect(this.messageSuccessLogin).toBeVisible();
         });
         await test.step('Perform logout', async () => {
+        await expect(this.logoutButton).toBeVisible();
         await this.logoutButton.click();
         });
         await test.step('Verify logout message', async () => {
         await expect(this.messageLogout).toBeVisible();
+        await expect(this.messageLogout).toHaveText(MESSAGES.success.logout);
         })
         };
       
